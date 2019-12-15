@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div class="container" id="todo">
+      <form class="add-form" v-on:submit.prevent="addTodo">
+        <input type="text" ref="comment" />
+        <button type="submit">追加</button>
+      </form>
+      <button v-on:click="selectedDelete(item)">選択済みの要素削除</button>
+      <ul class="list">
+        <li v-for="item in todoList" v-bind:todo-list="item">
+          {{ item.comment }}
+          <input type="checkbox" class="checkbox" />
+          <label for="checkbox"></label>
+          <button class="delete-item" v-on:click="deleteItem(item)">X</button>
+        </li>
+      </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      var STORAGE_KEY = "todos-vuejs";
+      var todoStorage = {
+        fetch: function() {
+          var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+          todos.forEach(function(todo, index) {
+            todo.id = index;
+          });
+          todoStorage.uid = todos.length;
+          return todos;
+        },
+        save: function(todos) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+        }
+      };
+
+      Vue.component("todo-item", {
+        props: ["todo", "inputData"]
+      });
+
+      //Create a new Vue instance
+      var vm = new Vue({
+        el: "#todo",
+        data: {
+          // todoText: "",
+          todoList: []
+        },
+        methods: {
+          addTodo: function(event, value) {
+            var comment = this.$refs.comment
+            this.todoList.push({ 
+              id: todoStorage.uid++,
+              comment: comment.value
+           })
+          },
+          deleteItem: function(item) {
+            var index = this.todoList.indexOf(item);
+            this.todoList.splice(index, 1);
+          },
+          selectedDelete: function(item) {
+
+          }
+        },
+        created() {
+          this.todoList = todoStorage.fetch();
+        },
+        watch: {
+          todoList: {
+            handler: function(todoList) {
+              todoStorage.save(todoList)
+            }
+          },
+          deep: true
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Todo_list</title>
+    <style>
+      .drag-area {
+        border: 2px solid #000000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="filters" id="todo">
+      <ul v-on:drop="drop_doing" v-on:dragover="allowDrop">
+        完了
+        <li
+          v-for="todoItem in todoItems"
+          v-show="todoItem.done"
+          v-bind:draggable="todoItem.draggable"
+          v-bind:id="todoItem.id"
+          v-on:dragstart="drag"
+        >
+          {{ todoItem.id }} / {{ todoItem.content }} / {{ todoItem.done }}
+        </li>
+      </ul>
+
+      <ul v-on:drop="drop_done" v-on:dragover="allowDrop">
+        未完了
+        <li
+          v-for="todoItem in todoItems"
+          v-show="!todoItem.done"
+          v-bind:draggable="todoItem.draggable"
+          v-bind:id="todoItem.id"
+          v-on:dragstart="drag"
+        >
+          {{ todoItem.id }} / {{ todoItem.content }} / {{ todoItem.done }}
+        </li>
+      </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      "use strict";
+      var obj = {
+        el: "#todo",
+        data: {
+          todoItems: [
+            { id: "data1", content: "歯を磨く", done: true, draggable: true },
+            { id: "data2", content: "皿を洗う", done: false, draggable: false },
+            { id: "data3", content: "お風呂に入る", done: false, draggable: true }
+          ]
+        },
+        methods: {
+          allowDrop: function(ev) {
+            ev.preventDefault();
+          },
+          drag: function(ev) {
+            ev.dataTransfer.setData("drag-id", ev.target.id);
+          },
+          drop_doing: function(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("drag-id");
+            console.log(data);
+            this.todoItems.forEach(element => {
+              if (element.id == data) {
+                element.done = true;
+                console.log(element.done)
+              }
+            });
+          },
+          drop_done: function(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("drag-id");
+            this.todoItems.forEach(element => {
+              if (element.id == data) {
+                element.done = false;
+              }
+            });
+          }
+        },
+        computed: {}
+      };
+      var vm = new Vue(obj);
+    </script>
+  </body>
+</html>

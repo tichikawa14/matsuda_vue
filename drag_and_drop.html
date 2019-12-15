@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Todo_list</title>
+    <style>
+        .drag-area {
+            border: 2px solid #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="filters" id="todo">
+        <div>
+            <ul class="drag-area" v-on:drop="drop_done" v-on:dragover="allowDrop">
+                完了
+                <li v-for="todo in todoList" 
+                    v-show="todo.isDone" 
+                    v-bind:id="todo.id"
+                    v-bind:draggable="true"
+                    v-on:dragstart="drag"
+                >
+                    {{ todo.comment }}
+                </li>
+            </ul>
+            <ul class="drag-area" v-on:drop="drop_doing" v-on:dragover="allowDrop">
+                進行中
+                <li v-for="todo in todoList" 
+                    v-if="!todo.isDone" 
+                    v-bind:id="todo.id" 
+                    v-bind:draggable="true"
+                    v-on:dragstart="drag"
+                > 
+                    {{ todo.comment }}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        'use strict';
+        var vm = new Vue({
+            el: "#todo",
+            data: {
+                inputData: "first",
+                todoList: [
+                    { id: "data1", comment: "テストAです", isDone: false },
+                    { id: "data2", comment: "テストBです", isDone: true },
+                    { id: "data3", comment: "テストCです", isDone: false }
+                ],
+            },
+            methods: {
+
+                allowDrop: function (ev) {
+                    ev.preventDefault();
+                },
+                drag: function (ev) {
+                    ev.dataTransfer.setData("text", ev.target.id);
+                },
+                drop_doing: function (ev) {
+                    ev.preventDefault();
+                    var data = ev.dataTransfer.getData("text");
+                    this.todoList.forEach(element => {
+                        if(element.id == data){
+                            element.isDone = false;
+                        }
+                    });
+                },
+                drop_done: function (ev) {
+                    ev.preventDefault();
+                    var data = ev.dataTransfer.getData("text");
+                    this.todoList.forEach(element => {
+                        if(element.id == data){
+                            element.isDone = true;
+                        }
+                    });
+                }
+            },
+            computed: {
+
+            }
+        });
+    </script>
+</body>
+
+</html>

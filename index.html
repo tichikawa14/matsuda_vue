@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Document</title>
+    </head>
+    
+    <body>
+      <div id="app">
+        <todo-item v-for="item in todos" v-bind:todo="item"></todo-item>
+      </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script>
+        let arr = ['todo'];
+        Vue.component('todo-item', {
+          props: arr,
+          template: `<li>Data is {{ todo.text }}</li>`
+        })
+        var main = new Vue({
+          el: "#app",
+          data: {
+            test: "テストです",
+            app: "松田信介です",
+            hoge: "Hoge fuga Done",
+            todos: [
+              { text: "my todo 1" },
+              { text: "my todo 2" },
+              { text: "my todo 3" }
+            ]
+          }
+        });
+      </script>
+    </body>
+    
+    </html>
