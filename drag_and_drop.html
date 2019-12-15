@@ -19,11 +19,13 @@
             <ul class="drag-area" v-on:drop="drop_done" v-on:dragover="allowDrop">
                 完了
                 <li v-for="todo in todoList" 
-                    v-show="todo.isDone" 
+                    v-if="todo.isDone" 
                     v-bind:id="todo.id"
                     v-bind:draggable="true"
                     v-on:dragstart="drag"
+                    v-on:click="test"
                 >
+                    {{ todo.id }}
                     {{ todo.comment }}
                 </li>
             </ul>
