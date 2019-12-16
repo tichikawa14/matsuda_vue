@@ -19,7 +19,7 @@
         <li
           v-for="todoItem in todoItems"
           v-show="todoItem.done"
-          v-bind:draggable="todoItem.draggable"
+          v-bind:draggable=true
           v-bind:id="todoItem.id"
           v-on:dragstart="drag"
         >
@@ -32,7 +32,7 @@
         <li
           v-for="todoItem in todoItems"
           v-show="!todoItem.done"
-          v-bind:draggable="todoItem.draggable"
+          v-bind:draggable=true
           v-bind:id="todoItem.id"
           v-on:dragstart="drag"
         >
@@ -47,9 +47,9 @@
         el: "#todo",
         data: {
           todoItems: [
-            { id: "data1", content: "歯を磨く", done: true, draggable: true },
-            { id: "data2", content: "皿を洗う", done: false, draggable: false },
-            { id: "data3", content: "お風呂に入る", done: false, draggable: true }
+            { id: "data1", content: "歯を磨く", done: true },
+            { id: "data2", content: "皿を洗う", done: false },
+            { id: "data3", content: "お風呂に入る", done: false }
           ]
         },
         methods: {
@@ -61,8 +61,8 @@
           },
           drop: function(ev) {
             ev.preventDefault();
-            var drag_id = ev.dataTransfer.getData("drag-id");
-            var todoItem = this.todoItems.find(item => item.id === drag_id);
+            let drag_id = ev.dataTransfer.getData("drag-id");
+            let todoItem = this.todoItems.find(item => item.id === drag_id);
             todoItem.done = todoItem.done ? false : true;
           },
         },
