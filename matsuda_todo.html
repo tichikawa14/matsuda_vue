@@ -28,12 +28,12 @@
 
       <ul v-for="member in members">
         {{ member.name }}
-        <li v-for="(todo, index) in todos" v-if="todo.member_id === member.id">
+        <li v-for="(task, index) in tasks" v-if="task.member_id === member.id">
           <!-- <template> -->
-            <input type="checkbox" class="checkbox" v-model="todo.checked" />
-            <label for="checkbox">{{ todo.text }}</label>
-            <button v-on:click="changeStatus">{{ todo.status }}</button>
-            <button class="delete" v-on:click="deleteTodo(member, index)">
+            <input type="checkbox" class="checkbox" v-model="task.checked" />
+            <label for="checkbox">{{ task.text }}</label>
+            <button v-on:click="changeStatus">{{ task.status }}</button>
+            <button class="delete" v-on:click="deleteTodo(member.id, index)">
               X
             </button>
         <!-- </template> -->

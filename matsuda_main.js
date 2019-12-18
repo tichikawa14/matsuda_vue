@@ -16,7 +16,7 @@ var vm = new Vue({
             { id: 3, name: "主任" },
             { id: 4, name: "係長" }
         ],
-        todos: [
+        tasks: [
             {
                 title: "人事評価",
                 text: "給与の査定",
@@ -66,39 +66,37 @@ var vm = new Vue({
             let member = this.members.find(
                 member => member.name == this.memberName
             );
-            member.todos.push({
+            member.tasks.push({
                 title: this.inputTitle,
                 text: this.inputText,
                 status: 0
             });
         },
-        deleteTodo: function(del_member, del_index) {
+        deleteTodo: function(member_id, del_index) {
             if (confirm("Todoを削除しますか？")) {
-                del_member.todos.splice(del_index, 1);
+                // todosを探す
+                // let targets = this.tasks.filter(task =>
+                //     task.member_id === member_id
+                // );
+                // console.log(this.tasks);
+                // // todoを抽出
+                // console.log(targets);
+                // let del_task = targets.find(target => target[del_index]);
+                // 削除
+                this.tasks.splice(del_index, 1);
+                // console.log(targets.find(function(target) {
+                //         target[del_index]
+                //     })
+                // );
             }
         },
         addTodo2: function() {
-            console.log("tittle 追加");
             // if (this.todos === undefined) alert("error")
-            this.tittles.push({ search: this.inputText2 });
+            this.titles.push({ search: this.inputText2 });
         },
         selectedDelete: function() {
-            // Object.keys(this.members).forEach(function (member) {
-            //   console.log(member);
-            // });
-            // let selectedMembers = this.members.filter(member => member.todos.checked === true)
-            // console.log(selectedMembers)
-            // let selectedMembers = []
-            // this.members.forEach(member => {
-            //   member.todos = member.todos.filter(todo => todo.checked === true)
-            //   }
-            // }
-            // }
-            this.members.forEach(memeber => {
-                memeber.todos = memeber.todos.filter(
-                    todo => todo.checked == false
-                );
-            });
+            // 削除
+            this.tasks = this.tasks.filter(task => task.checked == false)
         },
         changeStatus: function() {}
     }
