@@ -33,7 +33,7 @@
           <!-- <template> -->
             <input type="checkbox" class="checkbox" v-model="task.checked" />
             <label for="checkbox">{{ task.text }}</label>
-            <button v-on:click="changeStatus">{{ labels[task.status] }}</button>
+            <button v-on:click="changeStatus(task)">{{ labels[task.status] }}</button>
             <button class="delete" v-on:click="deleteTodo(member.id, index)">
               X
             </button>

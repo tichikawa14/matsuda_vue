@@ -1,4 +1,4 @@
-var vm = new Vue({
+var app = new Vue({
   el: "#todo",
   data: {
     memberName: "",
@@ -6,8 +6,9 @@ var vm = new Vue({
     inputText: "テキストを入力する",
     status_options: [
       { value: 0, label: 'すべて' },
-      { value: 1, label: '作業中' },
-      { value: 2, label: '完了' }
+      { value: 1, label: '未着手' },
+      { value: 2, label: '作業中' },
+      { value: 3, label: '完了' }
     ],
     // current: { 0: "すべて" },
     members: [
@@ -101,7 +102,9 @@ var vm = new Vue({
       // 削除
       this.tasks = this.tasks.filter(task => task.checked == false)
     },
-    changeStatus: function() {}
+    changeStatus: function(task) {
+      task.status = (task.status === this.status_options.length - 1) ? 0 : task.status + 1
+    }
   },
   computed: {
     labels() {
