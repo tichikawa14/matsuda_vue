@@ -4,16 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <link rel="stylesheet" href="main.css" />
+    <title>todo管理ツール</title>
   </head>
   <body>
-    <h1>todo管理ツール</h1>
     <div class="container" id="todo">
-      <!-- 絞り込みラジオボタン -->
-      <label v-for="(item, index) in status_options">
-        <input type="radio" v-bind:value="item" />{{ item.label }}
-      </label>
-      <section class="panel">
+      <h1>todo管理ツール</h1>
+
+      <!-- todo追加 -->
+      <p>todo追加</p>
+      <section class="add_todo_panel">
         <input type="search" list="list" v-model="memberName" />
         <datalist id="list">
           <option v-for="member in members" v-bind:value="member.name">
@@ -27,22 +27,56 @@
         <button @click="selectedDelete()">選択済みの要素削除</button>
       </section>
 
-      <ul v-for="member in members">
-        {{ member.name }}
-        <li v-for="(task, index) in tasks" v-if="task.member_id === member.id">
-          <!-- <template> -->
-            <input type="checkbox" class="checkbox" v-model="task.checked" />
-            <label for="checkbox">{{ task.text }}</label>
-            <button v-on:click="changeStatus(task)">{{ labels[task.status] }}</button>
-            <button class="delete" v-on:click="deleteTodo(member.id, index)">
-              X
-            </button>
-        <!-- </template> -->
-        </li>
-      </ul>
+      <!-- 担当者追加 -->
+      <p>担当者追加</p>
+      <section class="add_person_panel">
+
+      </section>
+
+      <!-- 絞り込みラジオボタン -->
+      <label v-for="(item, index) in status_options">
+        <input type="radio" v-bind:value="item" />{{ item.label }}
+      </label>
+
+      <!-- todoリスト -->
+      <section class="add_person_panel" v-for="member in members">
+        <table>
+          <!-- テーブルヘッダー -->
+          <thead>
+          <tr>
+            <th class="in_charge">{{ member.name }}</th>
+            <th class="comment">タイトル</th>
+            <th class="state">コメント</th>
+            <th class="button">状態</th>
+            <th class="button"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(task, index) in tasks" v-if="task.member_id === member.id">
+            <td>
+              <input type="checkbox" class="checkbox" v-model="task.checked" />
+            </td>
+            <td>
+              {{ task.title }}
+            </td>
+            <td>
+              {{ task.text }}
+            </td>
+            <td class="state">
+              <!-- 状態変更のモック -->
+              <button v-on:click="changeStatus(task)">{{ labels[task.status] }}</button>
+            </td>
+            <td v-on:click.meta="doRemove(item)">
+              <!-- 削除ボタンのモック -->
+              <button class="delete" v-on:click="deleteTodo(member.id, index)">
+                削除
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
     </div>
-<!--    &lt;!&ndash; ToDo テーブル &ndash;&gt;-->
-<!--    <table>-->
 <!--        &lt;!&ndash; テーブルヘッダー &ndash;&gt;-->
 <!--        <thead>-->
 <!--        <tr>-->
