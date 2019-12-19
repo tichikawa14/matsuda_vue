@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+​
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <title>todolist</title>
+</head>
+
+<body>
+  <h1>タスク管理システム</h1>
+
+  <div id="todo">
+    <div class="container" >
+      <section class="panel">
+        <p class="error" v-for="error in errorTodoText" :key="error.id">{{ error }}</p>
+
+        <!-- TODOの追加 -->
+        <p>Todoの追加</p>
+        <span include="form-input-select()">
+          <select v-model="selectMemberId">
+            <option hidden value="">担当者選択</option>
+            <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
+          </select>
+        </span>
+
+        <input type="text" class="text-input" placeholder="タイトル" v-model="inputTitle">
+        <input type="text" class="text-input" placeholder="内容" v-model="inputText">
+
+        <span @click="setDefaultDate()"><vuejs-datepicker v-model="inputDeadline" :disabled-dates="disabledDates" :language="ja" format="yyyy/MM/dd" wrapper-class="calendar" placeholder="期限"></vuejs-datepicker></span>
+        <span><button class="clearButton" @click="clearInputDate()">クリア</button></span>
+
+        <button class="addButton" @click="addTodo()">Todo追加</button>
+      </section>
+
+      <!-- 担当者追加 -->
+      <section class="panel">
+        <p class="error" v-for="error in errorMemberText" :key="error.id">{{ error }}</p>
+
+        <p>担当者の追加</p>
+        <input type="text" class="text-input" placeholder="担当者名" v-model="inputMemberName">
+        <button class="addButton" @click="addMember()">担当者追加</button>
+      </section>
+
+      <!-- TODOの検索 -->
+      <section class="search-panel">
+        <p>TODOの検索</p>
+        <button @click="toggleAllStatus()">全選択／解除</button>
+
+        <input type="checkbox" id="not-started" value="1" v-model="searchStatusIds">
+        <label class="serch-not-started" for="not-started">未着手</label>
+
+        <input type="checkbox" id="in-progress" value="2" v-model="searchStatusIds">
+        <label class="serch-in-progress" for="in-progress">着手中</label>
+
+        <input type="checkbox" id="completed" value="3" v-model="searchStatusIds">
+        <label class="serch-completed" for="completed">完了</label>
+
+        <select v-model="searchMemberId">
+          <option hidden value="">担当者選択</option>
+          <option value="all">全て</option>
+          <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
+        </select>
+      </section>
+
+      <!-- TODOの表示 -->
+      <section class="task-panel">
+        <table v-if="">
+          <tr>
+            <th class="member">担当者</th>
+            <th class="title">タイトル</th>
+            <th class="text">内容</th>
+            <th class="status">ステータス</th>
+            <th class="deadline">期限</th>
+            <th class="button"></th>
+          </tr>
+          <tr v-if="editMemberTodoId != memberTodo.id" v-for="memberTodo in memberTodos" :key="memberTodo.id">
+            <td class="member">{{ memberTodo.member_name }}</td>
+            <td class="title">{{ memberTodo.title }}</td>
+            <td class="text">{{ memberTodo.text }}</td>
+            <td class="status">{{ localeStatus(memberTodo.status_name) }}</td>
+            <td class="deadline">{{ memberTodo.end_at }}</td>
+            <td class="button">
+              <span class="btn-todo" @click="editTodoStart(memberTodo)">編集</span>
+              <span class="btn-todo" @click="deleteTodo(memberTodo)">削除</span>
+            </td>
+          </tr>
+          <tr v-else>
+            <td class="member">
+              <select v-model="selectMemberEditId">
+                <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>
+              </select>
+            </td>
+            <td class="title"><input type="text" class="edit-text-input" v-model="inputEditTitle"></td>
+            <td class="text"><input type="text" class="edit-text-input" v-model="inputEditText"></td>
+            <td class="status">
+              <select v-model="selectStatusEditId">
+                <option v-for="status in statuses" :key="status.id" :value="status.id">{{ localeStatus(status.name) }}</option>
+              </select>
+            </td>
+            <td class="deadline">
+              <vuejs-datepicker v-model="editDeadline" :disabled-dates="disabledDates" :language="ja" format="yyyy-MM-dd" wrapper-class="calendar" placeholder="期限"></vuejs-datepicker>
+              <span><button class="clearButton" @click="clearEditDate()">クリア</button></span>
+            </td>
+            <td class="button">
+              <span class="btn-todo" @click="editTodoCompleted(memberTodo)">編集完了</span>
+              <span class="btn-todo" @click="editTodoStop()">編集中止</span>
+            </td>
+          </tr>
+        </table>
+      <section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-toasted"></script>
+  <script src="https://unpkg.com/vuejs-datepicker"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
+
+  <script>
+    Vue.use(Toasted);
+
+    var vm = new Vue({
+      el: "#todo",
+      components: {
+        'vuejs-datepicker':vuejsDatepicker
+      },
+      data: {
+        selectMemberId: "",
+        inputTitle: "",
+        inputText: "",
+        inputMemberName: "",
+        inputDeadline: "",
+        errorTodoText: [],
+        errorMemberText: [],
+        searchStatusIds: [1, 2, 3],
+        searchMemberId: "",
+        editMemberTodoId: "",
+        selectMemberEditId: "",
+        inputEditTitle: "",
+        inputEditText: "",
+        selectStatusEditId: "",
+        editDeadline: "",
+        members: [
+          {id: 1, name: "部長"},
+          {id: 2, name: "課長"},
+          {id: 3, name: "主任"},
+          {id: 4, name: "係長"}
+        ],
+        todos: [
+          { id: 1, title: "人事評価", text: "給与の査定", status_id: 1, member_id: 1, end_at: moment().format("YYYY/MM/DD")},
+          { id: 2, title: "面接", text: "田中さん", status_id: 2, member_id: 1, end_at: ""},
+          { id: 3, title: "役員会議資料作成", text: "決算",  status_id: 3, member_id: 1, end_at: moment(new Date()).add(1, 'days').format('YYYY/MM/DD')},
+          { id: 4, title: "人事評価", text: "給与の査定",  status_id: 1, member_id: 2, end_at: moment(new Date()).add(3, 'days').format('YYYY/MM/DD')},
+          { id: 5, title: "進捗報告1", text: "Aプロジェクト", status_id: 2, member_id: 2, end_at: moment(new Date()).add(5, 'days').format('YYYY/MM/DD')},
+          { id: 6, title: "エクセル作成", text: "整理する",  status_id: 1, member_id: 3, end_at: moment(new Date()).add(10, 'days').format('YYYY/MM/DD')}
+        ],
+        statuses: [
+          { id: 1, name: "notStarted"},
+          { id: 2, name: "inProgress"},
+          { id: 3, name: "completed"}
+        ],
+        success: {
+          position: 'top-center',
+          duration: 1500,
+          type: 'success'
+        },
+        ja: {
+          language: 'Japanese',
+          months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+          monthsAbbr: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+          days: ['日', '月', '火', '水', '木', '金', '土'],
+          rtl: false,
+          ymd: 'yyyy-MM-dd',
+          yearSuffix: '年'
+        },
+        disabledDates: {
+          to: new Date(new Date().setDate(new Date().getDate() - 1))
+        }
+      },
+      computed: {
+        memberTodos() {
+          // ステータス検索
+          let searchStatusTodos = []
+          for (const searchStatusId of this.searchStatusIds) {
+            let targetStatusTodos = this.todos.filter(todo => todo.status_id == searchStatusId)
+            searchStatusTodos = searchStatusTodos.concat(targetStatusTodos)
+          }
+
+          // メンバー検索
+          let searchStatusMemberTodos = []
+          if (this.searchMemberId != "" && this.searchMemberId != "all") {
+            let targetMemberId = this.members.find(member => member.id == this.searchMemberId).id
+
+            searchStatusMemberTodos = searchStatusTodos.filter(todo => todo.member_id == targetMemberId)
+          } else {
+            searchStatusMemberTodos = searchStatusTodos
+          }
+
+          // 出力Todo整形
+          let memberTodos = []
+          for (const todo of searchStatusMemberTodos) {
+            todo["member_name"] = this.members.find(member => member.id == todo.member_id).name
+            todo["status_name"] = this.statuses.find(status => status.id == todo.status_id).name
+            this.localeStatus(todo)
+
+            memberTodos.push(todo)
+          }
+
+          return memberTodos
+        }
+      },
+      methods: {
+        addTodo() {
+          this.errorClear()
+          this.validTodoInput()
+
+          if (this.errorTodoText.length > 0) {
+            return
+          }
+
+          // 最後のTodoのID+1を作成するTodoのIDとする
+          const lastTodoId = this.getLastId(this.todos)
+          let params = {
+            id: lastTodoId + 1,
+            title: this.inputTitle,
+            text: this.inputText,
+            end_at: this.formatDate(this.inputDeadline),
+            status_id: 1,
+            member_id: this.selectMemberId
+          }
+          this.todos.push(params)
+          this.$toasted.show('Todoを作成しました', this.success)
+          this.inputClear()
+        },
+        validTodoInput() {
+          this.errorTodoText = []
+
+          if (this.selectMemberId == "") {
+            this.errorTodoText.push("担当者が選択されていません")
+          }
+
+          if (this.inputTitle == "") {
+            this.errorTodoText.push("タイトルが入力されていません")
+          }
+
+          if (this.inputText == "") {
+            this.errorTodoText.push("テキストが入力されていません")
+          }
+        },
+        addMember() {
+          this.errorClear()
+          this.validMemberInput()
+
+          if (this.errorMemberText.length > 0) {
+            return
+          }
+
+          // 最後のメンバーのID+1を作成するメンバーのIDとする
+          const lastMemberId = this.getLastId(this.members)
+          let params = {
+            id: lastMemberId + 1,
+            name: this.inputMemberName
+          }
+          this.members.push(params)
+          this.$toasted.show('担当者を作成しました', this.success)
+          this.inputClear()
+        },
+        validMemberInput() {
+          this.errorMemberText = []
+
+          if (this.inputMemberName == "") {
+            this.errorMemberText.push("担当者名が入力されていません")
+          }
+        },
+        getLastId(obj) {
+          return obj[obj.length - 1].id
+        },
+        editTodoStart(todo) {
+          this.selectMemberEditId = todo.member_id
+          this.inputEditTitle = todo.title
+          this.inputEditText = todo.text
+          this.selectStatusEditId = todo.status_id
+          this.editDeadline = todo.end_at
+
+          this.editMemberTodoId = this.memberTodos.find(memberTodo => memberTodo.id == todo.id).id
+        },
+        editTodoStop() {
+          this.editMemberTodoId = ""
+        },
+        editTodoCompleted(editTodo) {
+          let targetTodo = this.todos.find(todo => todo.id == editTodo.id)
+          targetTodo.member_id = this.selectMemberEditId
+          targetTodo.title = this.inputEditTitle
+          targetTodo.text = this.inputEditText
+          targetTodo.status_id = this.selectStatusEditId
+          targetTodo.end_at = this.formatDate(this.editDeadline)
+
+          this.editMemberTodoId = ""
+          this.$toasted.show('Todoを編集しました', this.success)
+        },
+        deleteTodo(todo) {
+          let deleteNum = this.todos.indexOf(todo)
+          this.todos.splice(deleteNum, 1)
+          this.$toasted.show('Todoを削除しました', this.success)
+        },
+        toggleAllStatus() {
+          if (this.searchStatusIds.length < 3) {
+            this.searchStatusIds = this.statuses.map(status => status.id)
+          } else {
+            this.searchStatusIds = []
+          }
+        },
+        openEndDatePicker() {
+          console.log("a")
+          this.inputDeadline = moment().format("YYYY/MM/DD")
+        },
+        errorClear() {
+          this.errorTodoText = []
+          this.errorMemberText = []
+        },
+        inputClear() {
+          this.inputTitle = ""
+          this.inputText =  ""
+          this.selectMemberId = ""
+          this.inputMemberName = ""
+          this.inputDeadline = ""
+        },
+        setDefaultDate() {
+          if (this.inputDeadline) {
+            return
+          }
+
+          this.inputDeadline = moment().format("YYYY/MM/DD")
+        },
+        clearInputDate() {
+          this.inputDeadline = ""
+        },
+        clearEditDate() {
+          this.editDeadline = ""
+        },
+        formatDate(date) {
+          console.log(date)
+          if (date == "") {
+            return
+          }
+
+          return moment(date).format("YYYY/MM/DD")
+        },
+        localeStatus(status) {
+          switch (status) {
+            case "notStarted":
+              return "未着手"
+            case "inProgress":
+              return "着手中"
+            default:
+              return "完了"
+          }
+        }
+      }
+    })
+
+  </script>
+</body>
+​
+
+</html>

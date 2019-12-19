@@ -1,0 +1,135 @@
+* {
+  margin: 0;
+  font-size: 11px;
+}
+
+input[type="text"], select:focus {
+  outline: 0;
+}
+
+.container {
+  margin: 20px;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+section {
+  margin: 20px 0;
+}
+
+.error {
+  color: red;
+}
+
+.serch-button {
+  margin-right: 10px;
+}
+
+.serch-completedall {
+  margin-right: 30px;
+}
+
+table{
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+table tr{
+  border-bottom: solid 1px #eee;
+  cursor: pointer;
+}
+
+table tr:hover{
+  background-color: #d4f0fd;
+}
+
+table .member,
+table .title,
+table .status,
+table .button,
+table .deadline{
+  text-align: center;
+  width: 15%;
+  padding: 10px 0;
+}
+
+table .text{
+  text-align: center;
+  width: 25%;
+  padding: 10px 0;
+}
+
+th {
+  background-color: rgb(241, 237, 237);
+}
+
+.btn-todo {
+  position: relative;
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  background: rgb(241, 237, 237);/*色*/
+  border: solid 1px rgb(241, 237, 237);/*線色*/
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.btn-todo:active {
+  background: rgb(209, 207, 207);/*色*/
+  border: solid 1px rgb(209, 207, 207);
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.calendar {
+  display: inline-block;
+}
+
+.calendar_label {
+  padding-left: 10px;
+  padding-right: 5px;
+}
+
+input {
+  -moz-box-shadow: inset 1px 2px 3px -6px rgba(0,0,0,0.5);
+  -webkit-box-shadow: inset 1px 4px 9px -6px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 1px 2px 3px -6px rgba(0,0,0,0.5);
+}
+
+select::-ms-expand {
+	display: none;
+}
+select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	padding: 5px 30px 5px 10px;
+	font-size: 93%;
+	line-height: 1.1em;
+	border-radius: 5px;
+	background-color: rgb(235, 235, 235);
+	background-image: url(./images/icon_arrow.svg);
+	background-repeat: no-repeat;
+	background-size: 12px 10px;
+	background-position: right 10px center;
+}
+
+.addButton {
+  display: inline-block;
+  padding: 3px 20px;
+  margin-left: 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  background-image: linear-gradient(45deg, rgb(221, 220, 219) 0%, #a5a4a4 100%);
+  transition: .2s;
+}
+
+.addButton:hover {
+  color: white;
+  background-image: linear-gradient(45deg, rgb(185, 185, 184) 0%, #7a7a7a 100%);
+}
