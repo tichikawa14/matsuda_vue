@@ -31,19 +31,24 @@ th {
     line-height: 40px;
 }
 
-thead th.id {
-    width: 50px;
+thead th.in_charge {
+    width: 10%;
+    color: black;
 }
 
-thead th.state {
-    width: 100px;
+thead th.title {
+    width: 20%;
 }
 
-thead th.button {
-    width: 60px;
+thead th.comment {
+    width: 50%;
 }
 
-tbody td.button, tbody td.state {
+thead th.state.button {
+    width: 10px;
+}
+
+td {
     text-align: center;
 }
 

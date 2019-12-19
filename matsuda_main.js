@@ -1,7 +1,7 @@
-var app = new Vue({
+let app = new Vue({
   el: "#todo",
   data: {
-    memberName: "",
+    memberName_id: "",
     inputTitle: "タイトル(仮)",
     inputText: "テキストを入力する",
     status_options: [
@@ -65,33 +65,20 @@ var app = new Vue({
   },
   methods: {
     addTodo: function() {
-      let add_member = this.members.find(
-        member => member.name == this.memberName
-      );
+      let title = this.$refs.title
+      let comment = this.$refs.comment
+
       this.tasks.push({
-        title: this.inputTitle,
-        text: this.inputText,
+        title: title.value,
+        text: comment.value,
         status: 0,
         checked: false,
-        member_id: add_member.id
+        member_id: this.memberName_id
       });
     },
     deleteTodo: function(member_id, del_index) {
       if (confirm("Todoを削除しますか？")) {
-        // todosを探す
-        // let targets = this.tasks.filter(task =>
-        //     task.member_id === member_id
-        // );
-        // console.log(this.tasks);
-        // // todoを抽出
-        // console.log(targets);
-        // let del_task = targets.find(target => target[del_index]);
-        // 削除
         this.tasks.splice(del_index, 1);
-        // console.log(targets.find(function(target) {
-        //         target[del_index]
-        //     })
-        // );
       }
     },
     addTodo2: function() {

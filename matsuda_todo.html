@@ -1,111 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="main.css" />
-    <title>todo管理ツール</title>
-  </head>
-  <body>
-    <div class="container" id="todo">
-      <h1>todo管理ツール</h1>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <link rel="stylesheet" href="main.css"/>
+  <title>todo管理ツール</title>
+</head>
+<body>
+<div class="container" id="todo">
+  <h1>todo管理ツール</h1>
 
-      <!-- todo追加 -->
-      <p>todo追加</p>
-      <section class="add_todo_panel">
-        <input type="search" list="list" v-model="memberName" />
-        <datalist id="list">
-          <option v-for="member in members" v-bind:value="member.name">
-          </option>
-        </datalist>
+  <!-- todo追加 -->
+  <p>todo追加</p>
+  <section class="add_todo_panel">
+    <select v-model="memberName_id">
+      <option hidden value="">担当者選択</option>
+      <option v-for="member in members" v-bind:value="member.id">{{ member.name }}</option>
+    </select>
+    <input type="text" class="text-input" placeholder="タイトル" ref="title"/>
+    <input type="text" class="text-input" placeholder="内容" ref="comment"/>
+    <!-- <button v-on:click="addTodo">追加</button> -->
+    <button @click="addTodo">追加</button>
+    <button @click="selectedDelete()">選択済みの要素削除</button>
+  </section>
 
-        <input type="text" class="text-input" v-model="inputTitle" />
-        <input type="text" class="text-input" v-model="inputText" />
-        <!-- <button v-on:click="addTodo">追加</button> -->
-        <button @click="addTodo">追加</button>
-        <button @click="selectedDelete()">選択済みの要素削除</button>
-      </section>
+  <!-- 担当者追加 -->
+  <p>担当者追加</p>
+  <section class="add_person_panel">
 
-      <!-- 担当者追加 -->
-      <p>担当者追加</p>
-      <section class="add_person_panel">
+  </section>
 
-      </section>
+  <!-- 絞り込みラジオボタン -->
+  <label v-for="(item, index) in status_options">
+    <input type="radio" v-bind:value="item"/>{{ item.label }}
+  </label>
 
-      <!-- 絞り込みラジオボタン -->
-      <label v-for="(item, index) in status_options">
-        <input type="radio" v-bind:value="item" />{{ item.label }}
-      </label>
+  <!-- todoリスト -->
+  <section class="add_person_panel" v-for="member in members">
+    <table>
+      <!-- テーブルヘッダー -->
+      <thead>
+      <tr>
+        <th class="in_charge">{{ member.name }}</th>
+        <th class="comment">タイトル</th>
+        <th class="state">コメント</th>
+        <th class="button">状態</th>
+        <th class="button"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(task, index) in tasks" v-if="task.member_id === member.id">
+        <td>
+          <input type="checkbox" class="checkbox" v-model="task.checked"/>
+        </td>
+        <td>
+          {{ task.title }}
+        </td>
+        <td>
+          {{ task.text }}
+        </td>
+        <td class="state">
+          <!-- 状態変更のモック -->
+          <button v-on:click="changeStatus(task)">{{ labels[task.status] }}</button>
+        </td>
+        <td v-on:click.meta="doRemove(item)">
+          <!-- 削除ボタンのモック -->
+          <button class="delete" v-on:click="deleteTodo(member.id, index)">
+            削除
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
 
-      <!-- todoリスト -->
-      <section class="add_person_panel" v-for="member in members">
-        <table>
-          <!-- テーブルヘッダー -->
-          <thead>
-          <tr>
-            <th class="in_charge">{{ member.name }}</th>
-            <th class="comment">タイトル</th>
-            <th class="state">コメント</th>
-            <th class="button">状態</th>
-            <th class="button"></th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(task, index) in tasks" v-if="task.member_id === member.id">
-            <td>
-              <input type="checkbox" class="checkbox" v-model="task.checked" />
-            </td>
-            <td>
-              {{ task.title }}
-            </td>
-            <td>
-              {{ task.text }}
-            </td>
-            <td class="state">
-              <!-- 状態変更のモック -->
-              <button v-on:click="changeStatus(task)">{{ labels[task.status] }}</button>
-            </td>
-            <td v-on:click.meta="doRemove(item)">
-              <!-- 削除ボタンのモック -->
-              <button class="delete" v-on:click="deleteTodo(member.id, index)">
-                削除
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </section>
-    </div>
-<!--        &lt;!&ndash; テーブルヘッダー &ndash;&gt;-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th class="id">誰</th>-->
-<!--            <th class="comment">タイトル</th>-->
-<!--            <th class="state">コメント</th>-->
-<!--            <th class="button">状態</th>-->
-<!--            <th class="button">-</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr v-for="item in computedTodos" v-bind:key="item.id">-->
-<!--            <th>{{ item.id }}</th>-->
-<!--            <td>{{ item.comment }}</td>-->
-<!--            <td class="state">-->
-<!--                &lt;!&ndash; 状態変更のモック &ndash;&gt;-->
-<!--                <button v-on:click="doChangeState(item)">-->
-<!--                    {{ labels[item.state] }}-->
-<!--                </button>-->
-<!--            </td>-->
-<!--            <td v-on:click.meta="doRemove(item)">-->
-<!--                &lt;!&ndash; 削除ボタンのモック &ndash;&gt;-->
-<!--                <button>削除</button>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="matsuda_main.js"></script>
-  </body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="matsuda_main.js"></script>
+</body>
 </html>
