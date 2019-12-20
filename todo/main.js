@@ -10,7 +10,7 @@ let app = new Vue({
       { value: 2, label: '作業中' },
       { value: 3, label: '完了' }
     ],
-    // current: { 0: "すべて" },
+    current: 0,
     members: [
       { id: 1, name: "部長" },
       { id: 2, name: "課長" },
@@ -22,14 +22,14 @@ let app = new Vue({
         title: "人事評価",
         text: "給与の査定",
         checked: false,
-        status: 0,
+        status: 1,
         member_id: 1
       },
       {
         title: "面接",
         text: "田中さん",
         checked: false,
-        status: 0,
+        status: 1,
         member_id: 3
 
       },
@@ -37,28 +37,28 @@ let app = new Vue({
         title: "役員会議資料作成",
         text: "決算",
         checked: false,
-        status: 0,
+        status: 1,
         member_id: 2
       },
       {
         title: "人事評価",
         text: "給与の査定",
         checked: false,
-        status: 0,
+        status: 1,
         member_id: 3
       },
       {
         title: "進捗報告1",
         text: "Aプロジェクト",
         checked: false,
-        status: 0,
+        status: 1,
         member_id: 4
       },
       {
         title: "エクセル作成",
         text: "整理する",
         checked: false,
-        status: 0,
+        status: 1,
         member_id: 2
       }
     ]
@@ -71,7 +71,7 @@ let app = new Vue({
       this.tasks.push({
         title: title.value,
         text: comment.value,
-        status: 0,
+        status: 1,
         checked: false,
         member_id: this.member_id
       });
@@ -90,7 +90,7 @@ let app = new Vue({
       this.tasks = this.tasks.filter(task => task.checked == false)
     },
     changeStatus: function(task) {
-      task.status = (task.status === this.status_options.length - 1) ? 0 : task.status + 1
+      task.status = (task.status === this.status_options.length - 1) ? 1 : task.status + 1
     }
   },
   computed: {
@@ -99,6 +99,14 @@ let app = new Vue({
         // console.log(Object.assign(a, { [b.value]: b.label }))
         return Object.assign(a, { [b.value]: b.label })
       }, {})
+    },
+    computedTasks: function() {
+      // データ current が -1 ならすべて
+      // それ以外なら current と state が一致するものだけに絞り込む
+      return this.tasks.filter(function(task) {
+        return this.current === 0 ? true : this.current === task.status
+      }, this)
     }
+
   }
 });

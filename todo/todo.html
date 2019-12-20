@@ -33,8 +33,9 @@
 
   <!-- 絞り込みラジオボタン -->
   <label v-for="(item, index) in status_options">
-    <input type="radio" v-bind:value="item"/>{{ item.label }}
+    <input type="radio" v-model="current" v-bind:value="item.value"/>{{ item.label }}
   </label>
+  <span>（{{ computedTasks.length }} / {{ tasks.length }} 件を表示）</span>
 
   <!-- todoリスト -->
   <section class="add_person_panel" v-for="member in members">
@@ -50,7 +51,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(task, index) in tasks" v-if="task.member_id === member.id">
+      <tr v-for="(task, index) in computedTasks" v-if="task.member_id === member.id">
         <td>
           <input type="checkbox" class="checkbox" v-model="task.checked"/>
         </td>
