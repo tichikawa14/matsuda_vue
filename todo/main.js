@@ -91,6 +91,36 @@ let app = new Vue({
     },
     changeStatus: function(task) {
       task.status = (task.status === this.status_options.length - 1) ? 1 : task.status + 1
+    },
+    allowDrop: function (ev) {
+      ev.preventDefault()
+    },
+    drag: function (ev) {
+      console.log(ev.target)
+      ev.dataTransfer.setData("drag-id", ev.target.closest('tbody').id)
+    },
+    drop: function (ev) {
+      ev.preventDefault();
+      // ドロップ元
+      let drag_id = ev.dataTransfer.getData("drag-id")
+      // ドロップ先
+      let drop_id = ev
+      console.log(ev.target)
+
+      // ドロップ先とドロップ元が異なる場合だけ、タスクのmember_idを変更
+      if (drag_id === drop_id) {
+        console.log(ev)
+        return
+      }
+
+
+      let target_task= this.tasks.find(task => task.id === drag_id)
+      console.log(target_task)
+      // member_id = this.tasks.find(task => task.member_id === drag_id)
+
+      // console.log(this.$refs.member)
+      // task. = task.status  ev.target.parentNode.id
+      // ev.target.appendChild(document.getElementById(drag_id))
     }
   },
   computed: {
