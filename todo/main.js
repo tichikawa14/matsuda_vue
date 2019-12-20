@@ -2,8 +2,8 @@ let app = new Vue({
   el: "#todo",
   data: {
     member_id: "",
-    inputTitle: "タイトル(仮)",
-    inputText: "テキストを入力する",
+    // inputTitle: "タイトル(仮)",
+    // inputText: "テキストを入力する",
     status_options: [
       { value: 0, label: 'すべて' },
       { value: 1, label: '未着手' },
@@ -103,6 +103,9 @@ let app = new Vue({
     computedTasks: function() {
       // データ current が -1 ならすべて
       // それ以外なら current と state が一致するものだけに絞り込む
+
+      // 第2引数のthisは、任意のオブジェクトをfilter以外で使う事ができる
+      // 配列以外からのデータも一緒に組み込んで処理したいようなケースで、とても便利
       return this.tasks.filter(function(task) {
         return this.current === 0 ? true : this.current === task.status
       }, this)

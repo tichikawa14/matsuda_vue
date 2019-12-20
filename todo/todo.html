@@ -44,10 +44,10 @@
       <thead>
       <tr>
         <th class="in_charge">{{ member.name }}</th>
-        <th class="comment">タイトル</th>
-        <th class="state">コメント</th>
-        <th class="button">状態</th>
-        <th class="button"></th>
+        <th class="comment"><span v-show="member.id === 1">タイトル</span></th>
+        <th class="state"><span v-show="member.id === 1">コメント</span></th>
+        <th class="button"><span v-show="member.id === 1">状態</span></th>
+        <th class="button"><span v-show="member.id === 1"></span></th>
       </tr>
       </thead>
       <tbody>
