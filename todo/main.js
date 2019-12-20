@@ -107,9 +107,10 @@ let app = new Vue({
       // 第2引数のthisは、任意のオブジェクトをfilter以外で使う事ができる
       // 配列以外からのデータも一緒に組み込んで処理したいようなケースで、とても便利
       return this.tasks.filter(function(task) {
+        // 第2引数のthisを付けないと、this == windowオブジェクトになってしまう
+        // console.log(this)
         return this.current === 0 ? true : this.current === task.status
-      }, this)
+      })
     }
-
   }
 });
