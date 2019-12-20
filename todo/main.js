@@ -110,7 +110,7 @@ let app = new Vue({
         // 第2引数のthisを付けないと、this == windowオブジェクトになってしまう
         // console.log(this)
         return this.current === 0 ? true : this.current === task.status
-      })
+      }, this)
     }
   }
 });
