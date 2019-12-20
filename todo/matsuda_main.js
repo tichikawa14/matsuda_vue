@@ -1,7 +1,7 @@
 let app = new Vue({
   el: "#todo",
   data: {
-    memberName_id: "",
+    member_id: "",
     inputTitle: "タイトル(仮)",
     inputText: "テキストを入力する",
     status_options: [
@@ -73,7 +73,7 @@ let app = new Vue({
         text: comment.value,
         status: 0,
         checked: false,
-        member_id: this.memberName_id
+        member_id: this.member_id
       });
     },
     deleteTodo: function(member_id, del_index) {

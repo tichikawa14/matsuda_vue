@@ -14,7 +14,7 @@
   <!-- todo追加 -->
   <p>todo追加</p>
   <section class="add_todo_panel">
-    <select v-model="memberName_id">
+    <select v-model="member_id">
       <option hidden value="">担当者選択</option>
       <option v-for="member in members" v-bind:value="member.id">{{ member.name }}</option>
     </select>
@@ -22,7 +22,7 @@
     <input type="text" class="text-input" placeholder="内容" ref="comment"/>
     <!-- <button v-on:click="addTodo">追加</button> -->
     <button @click="addTodo">追加</button>
-    <button @click="selectedDelete()">選択済みの要素削除</button>
+    <button @click="selectedDelete()">選択済みの削除</button>
   </section>
 
   <!-- 担当者追加 -->
