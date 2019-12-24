@@ -62,6 +62,8 @@
           drop: function(ev, state) {
             ev.preventDefault();
             let drag_id = ev.dataTransfer.getData("drag-id");
+            console.log(drag_id)
+
             let todoItem = this.todoItems.find(item => item.id === drag_id);
             todoItem.done = (state === "done") ? true : false;
           },

@@ -78,3 +78,9 @@ button {
     color: #fff;
     cursor: pointer;
 }
+
+/* ラストのtr用(ドラッグできる用) */
+tr:nth-last-of-type(1) > td {
+    border-style: none;
+    height: 20px;
+}
