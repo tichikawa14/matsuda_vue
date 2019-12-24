@@ -19,6 +19,7 @@ let app = new Vue({
     ],
     tasks: [
       {
+        id: 1,
         title: "人事評価",
         text: "給与の査定",
         checked: false,
@@ -26,6 +27,7 @@ let app = new Vue({
         member_id: 1
       },
       {
+        id: 2,
         title: "面接",
         text: "田中さん",
         checked: false,
@@ -34,6 +36,7 @@ let app = new Vue({
 
       },
       {
+        id: 3,
         title: "役員会議資料作成",
         text: "決算",
         checked: false,
@@ -41,6 +44,7 @@ let app = new Vue({
         member_id: 2
       },
       {
+        id: 4,
         title: "人事評価",
         text: "給与の査定",
         checked: false,
@@ -48,6 +52,7 @@ let app = new Vue({
         member_id: 3
       },
       {
+        id: 5,
         title: "進捗報告1",
         text: "Aプロジェクト",
         checked: false,
@@ -55,6 +60,7 @@ let app = new Vue({
         member_id: 4
       },
       {
+        id: 6,
         title: "エクセル作成",
         text: "整理する",
         checked: false,
@@ -96,31 +102,13 @@ let app = new Vue({
       ev.preventDefault()
     },
     drag: function (ev) {
-      console.log(ev.target)
       ev.dataTransfer.setData("drag-id", ev.target.closest('tbody').id)
     },
-    drop: function (ev) {
+    drop: function (ev, member_id) {
       ev.preventDefault();
-      // ドロップ元
       let drag_id = ev.dataTransfer.getData("drag-id")
-      // ドロップ先
-      let drop_id = ev
-      console.log(ev.target)
-
-      // ドロップ先とドロップ元が異なる場合だけ、タスクのmember_idを変更
-      if (drag_id === drop_id) {
-        console.log(ev)
-        return
-      }
-
-
-      let target_task= this.tasks.find(task => task.id === drag_id)
-      console.log(target_task)
-      // member_id = this.tasks.find(task => task.member_id === drag_id)
-
-      // console.log(this.$refs.member)
-      // task. = task.status  ev.target.parentNode.id
-      // ev.target.appendChild(document.getElementById(drag_id))
+      let target_task = this.tasks.find(task => task.member_id == drag_id)
+      target_task.member_id = member_id
     }
   },
   computed: {
