@@ -75,6 +75,7 @@ let app = new Vue({
       let comment = this.$refs.comment
 
       this.tasks.push({
+        id: this.lastId(this.tasks) + 1,
         title: title.value,
         text: comment.value,
         status: 1,
@@ -87,9 +88,18 @@ let app = new Vue({
         this.tasks.splice(del_index, 1);
       }
     },
-    addTodo2: function() {
-      // if (this.todos === undefined) alert("error")
-      this.titles.push({ search: this.inputText2 });
+    addMember: function() {
+      let in_charge = this.$refs.in_charge
+
+      this.members.push({
+        id: this.lastId(this.members) + 1,
+        name: in_charge.value
+      })
+    },
+    lastId: function(obj) {
+      // 最後のオブジェクトを返す
+      // obj[obj.length - 1].idと同義
+      return obj.slice(-1)[0].id
     },
     selectedDelete: function() {
       // 削除

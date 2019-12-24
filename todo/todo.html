@@ -21,14 +21,15 @@
     <input type="text" class="text-input" placeholder="タイトル" ref="title"/>
     <input type="text" class="text-input" placeholder="内容" ref="comment"/>
     <!-- <button v-on:click="addTodo">追加</button> -->
-    <button @click="addTodo">追加</button>
+    <button @click="addTodo">タスク追加</button>
     <button @click="selectedDelete()">選択済みの削除</button>
   </section>
 
   <!-- 担当者追加 -->
   <p>担当者追加</p>
   <section class="add_person_panel">
-
+    <input type="text" class="text-input" placeholder="山田 太郎" ref="in_charge"/>
+    <button @click="addMember">担当者追加</button>
   </section>
 
   <!-- 絞り込みラジオボタン -->
