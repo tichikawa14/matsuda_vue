@@ -19,8 +19,9 @@ let app = new Vue({
     vuejsDatepicker
   },
   data: {
-    member_id: "",
+    add_member_id: "",
     input_end_at: "",
+    deleteMemberId: "",
     status_options: [
       { value: 0, label: 'すべて' },
       { value: 1, label: '未着手' },
@@ -137,7 +138,7 @@ let app = new Vue({
       });
 
     },
-    deleteTodo: function(member_id, del_index) {
+    deleteTodo: function(del_index) {
       if (confirm("Todoを削除しますか？")) {
         this.tasks.splice(del_index, 1);
       }
@@ -149,6 +150,12 @@ let app = new Vue({
         id: this.lastId(this.members) + 1,
         name: in_charge.value
       })
+    },
+    deleteMember: function() {
+      let delMember = this.members.find(member => member.id == this.deleteMemberId)
+      if (confirm(`${delMember.name}を削除しますか？`)) {
+        this.members = this.members.filter(member => member.id != this.deleteMemberId)
+      }
     },
     lastId: function(obj) {
       // 最後のオブジェクトを返す
