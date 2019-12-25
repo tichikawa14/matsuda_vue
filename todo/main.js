@@ -22,6 +22,8 @@ let app = new Vue({
     add_member_id: "",
     input_end_at: "",
     deleteMemberId: "",
+    errorTaskMessage: [],
+    errorMemberMessage: [],
     status_options: [
       { value: 0, label: 'すべて' },
       { value: 1, label: '未着手' },
@@ -124,8 +126,27 @@ let app = new Vue({
   },
   methods: {
     addTodo: function() {
+      // クリア
+      this.errorTaskMessage = []
+      // バリデーション
+      if (!this.member_id) {
+        this.errorTaskMessage.push("担当者が選択されていません")
+      }
       let title = this.$refs.title
+      if (title.value == "") {
+        this.errorTaskMessage.push("タスクが入力されていません")
+      }
       let comment = this.$refs.comment
+      if (comment.value == "") {
+        this.errorTaskMessage.push("コメントが入力されていません")
+      }
+      if (this.input_end_at == "") {
+        this.errorTaskMessage.push("期限が入力されていません")
+      }
+
+      if (this.errorTaskMessage.length > 0) {
+        return
+      }
 
       this.tasks.push({
         id: this.lastId(this.tasks) + 1,
@@ -145,6 +166,14 @@ let app = new Vue({
     },
     addMember: function() {
       let in_charge = this.$refs.in_charge
+
+      // クリア
+      this.errorMemberMessage = []
+      // バリデーション
+      if (in_charge.value == "") {
+        this.errorMemberMessage.push("担当者が入力されていません")
+        return
+      }
 
       this.members.push({
         id: this.lastId(this.members) + 1,

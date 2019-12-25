@@ -14,6 +14,10 @@
   <!-- todo追加 -->
   <p>todo追加</p>
   <section class="add_todo_panel">
+    <ul class="errorMsg">
+      <li  v-for="error in errorTaskMessage">{{ error }}</li>
+    </ul>
+
     <select v-model="add_member_id">
       <option hidden value="">担当者選択</option>
       <option v-for="member in members" v-bind:value="member.id">{{ member.name }}</option>
@@ -29,6 +33,9 @@
   <!-- 担当者追加 -->
   <p>担当者追加</p>
   <section class="add_person_panel">
+    <ul class="errorMsg">
+      <li  v-for="error in errorMemberMessage">{{ error }}</li>
+    </ul>
     <input type="text" class="text-input" placeholder="山田 太郎" ref="in_charge"/>
     <button @click="addMember">担当者追加</button>
     <select v-model="deleteMemberId">

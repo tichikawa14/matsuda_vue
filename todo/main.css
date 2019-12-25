@@ -95,3 +95,7 @@ tr:nth-last-of-type(1) > td {
 .calendar {
     display: inline-block;
 }
+
+.errorMsg {
+    color: red;
+}
