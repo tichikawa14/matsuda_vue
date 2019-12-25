@@ -82,6 +82,9 @@ button {
     color: #fff;
     cursor: pointer;
 }
+.deleteButton {
+    background: tomato;
+}
 
 /* ラストのtr用(ドラッグできる用) */
 tr:nth-last-of-type(1) > td {

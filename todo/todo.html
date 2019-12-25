@@ -23,7 +23,7 @@
     <vuejs-datepicker v-model="input_end_at" :disabled-dates="disabledDates" format="yyyy年MM月dd日" wrapper-class="calendar" :language="ja" placeholder="期限"></vuejs-datepicker>
     <!-- <button v-on:click="addTodo">追加</button> -->
     <button @click="addTodo">タスク追加</button>
-    <button @click="selectedDelete()">選択済みの削除</button>
+    <button class="deleteButton" @click="selectedDelete()">選択済みの削除</button>
   </section>
 
   <!-- 担当者追加 -->
@@ -79,7 +79,7 @@
         </td>
         <td v-on:click.meta="doRemove(item)">
           <!-- 削除ボタンのモック -->
-          <button class="delete" v-on:click="deleteTodo(index)">
+          <button class="deleteButton" v-on:click="deleteTodo(index)">
             削除
           </button>
         </td>

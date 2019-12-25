@@ -153,6 +153,10 @@ let app = new Vue({
     },
     deleteMember: function() {
       let delMember = this.members.find(member => member.id == this.deleteMemberId)
+      if (!delMember) {
+        alert("削除する担当者を選択してください")
+        return
+      }
       if (confirm(`${delMember.name}を削除しますか？`)) {
         this.members = this.members.filter(member => member.id != this.deleteMemberId)
       }
