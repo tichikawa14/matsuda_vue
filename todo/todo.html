@@ -14,7 +14,7 @@
   <!-- todo追加 -->
   <p>todo追加</p>
   <section class="add_todo_panel">
-    <select v-model="member_id">
+    <select v-model="add_member_id">
       <option hidden value="">担当者選択</option>
       <option v-for="member in members" v-bind:value="member.id">{{ member.name }}</option>
     </select>
@@ -31,6 +31,11 @@
   <section class="add_person_panel">
     <input type="text" class="text-input" placeholder="山田 太郎" ref="in_charge"/>
     <button @click="addMember">担当者追加</button>
+    <select v-model="deleteMemberId">
+      <option hidden value="">担当者選択</option>
+      <option v-for="(member, index) in members" :value="member.id">{{ member.name }}</option>
+    </select>
+    <button class="deleteButton" @click="deleteMember()">担当者削除</button>
   </section>
 
   <!-- 絞り込みラジオボタン -->
@@ -74,7 +79,7 @@
         </td>
         <td v-on:click.meta="doRemove(item)">
           <!-- 削除ボタンのモック -->
-          <button class="delete" v-on:click="deleteTodo(member.id, index)">
+          <button class="delete" v-on:click="deleteTodo(index)">
             削除
           </button>
         </td>
