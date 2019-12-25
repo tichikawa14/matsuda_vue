@@ -41,10 +41,14 @@ thead th.title {
 }
 
 thead th.comment {
-    width: 50%;
+    width: 40%;
 }
 
-thead th.state.button {
+thead th.date {
+    width: 20%;
+}
+
+thead th.button {
     width: 10px;
 }
 
@@ -83,4 +87,8 @@ button {
 tr:nth-last-of-type(1) > td {
     border-style: none;
     height: 20px;
+}
+
+.calendar {
+    display: inline-block;
 }
