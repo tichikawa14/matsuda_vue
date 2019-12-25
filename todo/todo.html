@@ -20,6 +20,7 @@
     </select>
     <input type="text" class="text-input" placeholder="タイトル" ref="title"/>
     <input type="text" class="text-input" placeholder="内容" ref="comment"/>
+    <vuejs-datepicker v-model="input_end_at" :disabled-dates="disabledDates" format="yyyy年MM月dd日" wrapper-class="calendar" :language="ja" placeholder="期限"></vuejs-datepicker>
     <!-- <button v-on:click="addTodo">追加</button> -->
     <button @click="addTodo">タスク追加</button>
     <button @click="selectedDelete()">選択済みの削除</button>
@@ -45,8 +46,9 @@
       <thead>
       <tr>
         <th class="in_charge">{{ member.name }}</th>
-        <th class="comment"><span v-show="member.id === 1">タイトル</span></th>
-        <th class="state"><span v-show="member.id === 1">コメント</span></th>
+        <th class="title"><span v-show="member.id === 1">タイトル</span></th>
+        <th class="comment"><span v-show="member.id === 1">コメント</span></th>
+        <th class="date"><span v-show="member.id === 1">期限</span></th>
         <th class="button"><span v-show="member.id === 1">状態</span></th>
         <th class="button"><span v-show="member.id === 1"></span></th>
       </tr>
@@ -62,6 +64,9 @@
         </td>
         <td>
           {{ task.text }}
+        </td>
+        <td>
+          {{ FormatDate(task.end_at) }}
         </td>
         <td class="state">
           <!-- 状態変更のモック -->
@@ -81,6 +86,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vuejs-datepicker"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
+
 <script src="main.js"></script>
 </body>
 </html>

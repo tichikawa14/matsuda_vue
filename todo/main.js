@@ -13,11 +13,14 @@ let todoStorage = {
   }
 }
 
-
 let app = new Vue({
   el: "#todo",
+  components: {
+    vuejsDatepicker
+  },
   data: {
     member_id: "",
+    input_end_at: "",
     status_options: [
       { value: 0, label: 'すべて' },
       { value: 1, label: '未着手' },
@@ -38,7 +41,8 @@ let app = new Vue({
         text: "給与の査定",
         checked: false,
         status: 1,
-        member_id: 1
+        member_id: 1,
+        end_at: moment(new Date()).add(1, 'days').format('YYYY-MM-DD')
       },
       {
         id: 2,
@@ -46,8 +50,8 @@ let app = new Vue({
         text: "田中さん",
         checked: false,
         status: 1,
-        member_id: 3
-
+        member_id: 3,
+        end_at: moment(new Date()).add(3, 'days').format('YYYY-MM-DD')
       },
       {
         id: 3,
@@ -55,7 +59,8 @@ let app = new Vue({
         text: "決算",
         checked: false,
         status: 1,
-        member_id: 2
+        member_id: 2,
+        end_at: moment(new Date()).add(5, 'days').format('YYYY-MM-DD')
       },
       {
         id: 4,
@@ -63,7 +68,8 @@ let app = new Vue({
         text: "給与の査定",
         checked: false,
         status: 1,
-        member_id: 3
+        member_id: 3,
+        end_at: moment(new Date()).add(6, 'days').format('YYYY-MM-DD')
       },
       {
         id: 5,
@@ -71,7 +77,8 @@ let app = new Vue({
         text: "Aプロジェクト",
         checked: false,
         status: 1,
-        member_id: 4
+        member_id: 4,
+        end_at: moment(new Date()).add(7, 'days').format('YYYY-MM-DD')
       },
       {
         id: 6,
@@ -79,17 +86,30 @@ let app = new Vue({
         text: "整理する",
         checked: false,
         status: 1,
-        member_id: 2
+        member_id: 2,
+        end_at: moment(new Date()).add(8, 'days').format('YYYY-MM-DD')
       }
-    ]
+    ],
+    defaultDate: moment(new Date()),
+    ja: {
+      language: 'Japanese',
+      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      monthsAbbr: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      days: ['日', '月', '火', '水', '木', '金', '土'],
+      rtl: false,
+      ymd: 'yyyy-MM-dd',
+      yearSuffix: '年'
+    },
+    disabledDates: {
+      to: new Date(new Date().setDate(new Date().getDate() - 1))
+    }
   },
   created() {
     // インスタンス作成時に自動的に fetch() する
     let dataList = todoStorage.fetch()
 
-    // 配列に値が帰ってきた場合
+    // 配列に値がある場合、インスタンス変数に格納
     if (dataList.length) {
-      console.log(dataList)
       this.members = dataList[0]
       this.tasks = dataList[1]
     }
@@ -112,8 +132,10 @@ let app = new Vue({
         text: comment.value,
         status: 1,
         checked: false,
-        member_id: this.member_id
+        member_id: this.member_id,
+        end_at: moment(this.input_end_at).format('YYYY-MM-DD')
       });
+
     },
     deleteTodo: function(member_id, del_index) {
       if (confirm("Todoを削除しますか？")) {
@@ -153,6 +175,9 @@ let app = new Vue({
       let drag_id = ev.dataTransfer.getData("drag-id")
       let target_task = this.tasks.find(task => task.id === Number(drag_id))
       target_task.member_id = member_id
+    },
+    FormatDate(date) {
+      return moment(date).format('YYYY年MM月DD日');
     }
   },
   computed: {
