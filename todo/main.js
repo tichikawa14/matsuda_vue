@@ -1,9 +1,23 @@
+// https://jp.vuejs.org/v2/examples/todomvc.html
+let STORAGE_KEY = 'ti-todo'
+let todoStorage = {
+  fetch: function() {
+    let dataList = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) || '[]'
+    )
+    return dataList
+  },
+
+  save: function(datalist) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(datalist))
+  }
+}
+
+
 let app = new Vue({
   el: "#todo",
   data: {
     member_id: "",
-    // inputTitle: "タイトル(仮)",
-    // inputText: "テキストを入力する",
     status_options: [
       { value: 0, label: 'すべて' },
       { value: 1, label: '未着手' },
@@ -69,6 +83,24 @@ let app = new Vue({
       }
     ]
   },
+  created() {
+    // インスタンス作成時に自動的に fetch() する
+    let dataList = todoStorage.fetch()
+
+    // 配列に値が帰ってきた場合
+    if (dataList.length) {
+      console.log(dataList)
+      this.members = dataList[0]
+      this.tasks = dataList[1]
+    }
+
+    // 複数の値を監視
+    this.$watch(function () {
+      return [this.members, this.tasks]
+    }, function(datalist) {
+      todoStorage.save(datalist)
+    }, {deep: true})
+  },
   methods: {
     addTodo: function() {
       let title = this.$refs.title
@@ -98,6 +130,8 @@ let app = new Vue({
     },
     lastId: function(obj) {
       // 最後のオブジェクトを返す
+      if (obj.length == 0) return 0
+
       // obj[obj.length - 1].idと同義
       return obj.slice(-1)[0].id
     },
@@ -112,12 +146,12 @@ let app = new Vue({
       ev.preventDefault()
     },
     drag: function (ev) {
-      ev.dataTransfer.setData("drag-id", ev.target.closest('tbody').id)
+      ev.dataTransfer.setData("drag-id", ev.target.id)
     },
     drop: function (ev, member_id) {
       ev.preventDefault();
       let drag_id = ev.dataTransfer.getData("drag-id")
-      let target_task = this.tasks.find(task => task.member_id == drag_id)
+      let target_task = this.tasks.find(task => task.id === Number(drag_id))
       target_task.member_id = member_id
     }
   },
