@@ -51,9 +51,9 @@
         <th class="button"><span v-show="member.id === 1"></span></th>
       </tr>
       </thead>
-      <tbody v-on:drop="drop($event, member.id)" v-on:dragover="allowDrop" v-bind:id="member.id" v-on:dragstart="drag">
+      <tbody v-on:drop="drop($event, member.id)" v-on:dragover="allowDrop" v-on:dragstart="drag">
       <tr v-for="(task, index) in computedTasks" v-if="task.member_id === member.id"
-          v-bind:draggable=true>
+          v-bind:id="task.id" v-bind:draggable=true>
         <td>
           <input type="checkbox" class="checkbox" v-model="task.checked"/>
         </td>
