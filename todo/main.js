@@ -24,6 +24,7 @@ let app = new Vue({
     deleteMemberId: "",
     errorTaskMessage: [],
     errorMemberMessage: [],
+    editMemberId: "",
     status_options: [
       { value: 0, label: 'すべて' },
       { value: 1, label: '未着手' },
@@ -200,6 +201,9 @@ let app = new Vue({
     selectedDelete: function() {
       // 削除
       this.tasks = this.tasks.filter(task => task.checked == false)
+    },
+    editTask: function(task_id) {
+      this.editMemberId = task_id
     },
     changeStatus: function(task) {
       task.status = (task.status === this.status_options.length - 1) ? 1 : task.status + 1

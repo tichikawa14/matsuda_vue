@@ -56,7 +56,7 @@
     <table>
       <!-- テーブルヘッダー -->
       <thead>
-      <tr>
+      <tr >
         <th class="in_charge">{{ member.name }}</th>
         <th class="title"><span v-show="member.id === 1">タイトル</span></th>
         <th class="comment"><span v-show="member.id === 1">コメント</span></th>
@@ -67,7 +67,7 @@
       </thead>
       <tbody v-on:drop="drop($event, member.id)" v-on:dragover="allowDrop" v-on:dragstart="drag">
       <tr v-for="(task, index) in computedTasks" v-if="task.member_id === member.id"
-          v-bind:id="task.id" v-bind:draggable=true>
+          v-on:dblclick="editTask(task.member_id)" v-bind:id="task.id" v-bind:draggable=true>
         <td>
           <input type="checkbox" class="checkbox" v-model="task.checked"/>
         </td>
@@ -91,6 +91,27 @@
           </button>
         </td>
       </tr>
+<!--      <tr v-else>-->
+<!--        <td class="member">-->
+<!--          <select v-model="editMemberId">-->
+<!--            <option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option>-->
+<!--          </select>-->
+<!--        </td>-->
+<!--        <td class="title"><input type="text"></td>-->
+<!--        <td class="text"><input type="text"></td>-->
+<!--        <td class="state">-->
+<!--          &lt;!&ndash; 状態変更のモック &ndash;&gt;-->
+<!--          <button v-on:click="changeStatus(task)">{{ labels[task.status] }}</button>-->
+<!--        </td>-->
+<!--        <td class="deadline">-->
+<!--          <vuejs-datepicker  :disabled-dates="disabledDates" :language="ja" format="yyyy-MM-dd" wrapper-class="calendar" placeholder="期限"></vuejs-datepicker>-->
+<!--&lt;!&ndash;          <span><button class="clearButton" @click="clearEditDate()">クリア</button></span>&ndash;&gt;-->
+<!--        </td>-->
+<!--        <td class="button">-->
+<!--          <span class="btn-todo" @click="editTodoCompleted(memberTodo)">編集完了</span>-->
+<!--          <span class="btn-todo" @click="editTodoStop()">編集中止</span>-->
+<!--        </td>-->
+<!--      </tr>-->
       <tr class="last-tr"><td></td><td></td><td></td><td></td><td></td></tr>
       </tbody>
     </table>
