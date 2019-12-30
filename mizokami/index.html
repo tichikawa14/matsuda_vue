@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>1348_JS & Jsonserver-de-CRUD</title>
+</head>
+
+<body>
+
+<div>
+  <h4>Create data</h4>
+  <input id="siteName" type="text" placeholder="SiteName">
+  <input id="siteURL" type="text" placeholder="SiteURL">
+  <button onclick="createData()">Create</button>
+</div>
+----------------------------------------
+<h4>Read data</h4>
+<button onclick="readData()">read</button>
+<ul id="dataList">
+
+</ul>
+----------------------------------------
+<h4>Update data</h4>
+<div>
+  <input id="updateID" placeholder="ID" type="number">
+  <input id="updateSiteName" placeholder="SiteName">
+  <input id="updateSiteURL" placeholder="SiteURL">
+  <button onclick="updateData()">Update</button>
+</div>
+----------------------------------------
+<h4>Delete data</h4>
+<div>
+  <input id="deleteID" placeholder=0>
+  <button onclick="deleteData()">Delete</button>
+</div>
+
+
+<script>
+  // fetch(URI)
+  // .then((res)=>res.json())
+  // .then((data)=>{レスポンス受信時に行う処理})
+  // .chatch((err)=>console.log(err))
+  var sites = [
+    {
+      name: "YAHOO11",
+      url: "yahoo.co.jp"
+    }
+  ];
+
+  function createData() {
+    const newSiteName = document.getElementById('siteName').value;
+    const newSiteURL = document.getElementById('siteURL').value;
+    if (newSiteName === "" || newSiteURL === "") {
+      return
+    }
+    const siteInfo = {
+      name: newSiteName,
+      url: newSiteURL
+    }
+
+    fetch('http://localhost:3000/sites', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(siteInfo)
+    })
+      .then(() => {
+        document.getElementById('siteName').value = '';
+        document.getElementById('siteURL').value = '';
+      })
+      .catch((err) => console.log(err))
+  }
+
+
+  function readData() {
+    // fetch(URI)
+    // .then((res)=>res.json())
+    // .then((data)=>{レスポンス受信時に行う処理})
+    // .chatch((err)=>console.log(err))
+
+    const list = document.getElementById('dataList');
+    list.innerHTML = "";
+    // ここにFetchを入れる
+    fetch('http://localhost:3000/sites')
+      .then((res) => res.json())
+      .then((sites) => {
+
+        for (let i = 0; i < sites.length; i++) {
+          console.log(i)
+          list.innerHTML += `<li>ID:${sites[i].id} // ${sites[i].name}  // ${sites[i].url} </li>`
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  // --------------------------------------------------
+  function updateData() {
+    console.log("updateが押されたよ");
+    const updateID = document.getElementById("updateID").value;
+    const updateName = document.getElementById("updateSiteName").value;
+    const updateURL = document.getElementById("updateSiteURL").value;
+    if (updateID === "" || updateName === "" || updateURL === "") return;
+    console.log(`Updateするのは、ID:${updateID} //Name:${updateName}//URL:${updateURL}`);
+
+    console.log("------入れ替えるよ！------");
+    siteInfo = {
+      name: updateName,
+      url: updateURL
+    }
+
+    // ---UPDATE の　Fetch--//
+    fetch(`http://localhost:3000/sites/${updateID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(siteInfo)
+    })
+      .then(() => {
+
+      })
+      .catch((err) => console.log(err))
+    // ---UPDATE の　Fetch--//
+  }
+
+
+  function deleteData() {
+    console.log("---Deleteが押されました。---");
+
+    const deleteId = document.getElementById('deleteID').value;
+    if (deleteID === "") return;
+    fetch(`http://localhost:3000/sites/${deleteId}`, {
+      method: 'DELETE'
+    })
+      .then(() => {
+        document.getElementById('deleteID').value = "";
+      })
+      .catch((err) => console.log(err))
+
+  }
+</script>
+</body>
+
+</html>
